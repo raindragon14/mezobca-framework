@@ -15,7 +15,8 @@ training:
   max_length: 1024              # Lebih panjang untuk multi-turn conversation
   batch_size: 1                 # MeZO wajib batch_size=1
   num_epochs: 2
-  learning_rate: 1e-4           # MeZO butuh LR lebih besar dari Adam
+  learning_rate: 1e-3           # Aggressive LR for quick convergence check
+
   lr_scheduler: "cosine"
   warmup_steps: 50
   weight_decay: 0.01
@@ -26,8 +27,9 @@ mezo:
   sampling_type: "antithetic"  # "antithetic" (2 fwd passes, lower variance) or "symmetric"
   normalize_grad: true         # Normalize gradient estimates
   num_grad_estimates: 1        # Number of gradient estimates per step
-  grad_clip: 1.0               # Anti-divergence: clip projected_grad to [-1, 1]
-  warmup_steps: 20             # Anti-divergence: LR warmup over first N steps
+  grad_clip: 10.0              # Looser clipping to allow bigger steps
+  warmup_steps: 5              # Shorter warmup for instant feedback
+
 
 bca:
   use_fft: true              # Use FFT for circulant matrix multiplication
