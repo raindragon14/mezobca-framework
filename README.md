@@ -254,7 +254,7 @@ Contributions welcome! Please see CONTRIBUTING.md for guidelines.
 
 - Issues: [GitHub Issues](https://github.com/yourusername/mezo-bca-framework/issues)
 - Discussions: [GitHub Discussions](https://github.com/yourusername/mezo-bca-framework/discussions)
-- Email: your.email@example.com
+- Email: mrpandanarang@gmail.com
 
 ## Acknowledgments
 
