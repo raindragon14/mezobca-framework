@@ -39,7 +39,8 @@ hardware:
   num_threads: 8             # Number of CPU threads
   use_mkl: true              # Use Intel MKL for FFT acceleration
   use_bfloat16: true         # Use bfloat16 for faster computation if supported
-  compile_model: true        # Use torch.compile() for potential speedup
+  compile_model: false        # Disabled by default on Windows (requires MSVC)
+
 
 logging:
   log_dir: "./logs"

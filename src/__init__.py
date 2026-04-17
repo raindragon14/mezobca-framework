@@ -10,10 +10,9 @@ from .bca_layers import (
 )
 
 from .mezo_optimizer import (
-    MeZOOptimizer,
-    MeZOTrainer,
-    mezo_train
+    MeZOOptimizer
 )
+
 
 from .model_utils import (
     load_qwen_model,
@@ -47,8 +46,7 @@ __all__ = [
     
     # MeZO optimizer
     "MeZOOptimizer",
-    "MeZOTrainer",
-    "mezo_train",
+
     
     # Model utilities
     "load_qwen_model",

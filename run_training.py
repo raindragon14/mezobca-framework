@@ -68,9 +68,17 @@ def prepare_dataset(tokenizer, config):
         dataset = load_dataset("csv", data_files=dataset_path)
     else:
         try:
-            dataset = load_dataset(dataset_path)
-        except Exception:
-            raise ValueError(f"Unsupported dataset format: {dataset_path}")
+            # Support "dataset_name,subset_name" format
+            if "," in dataset_path:
+                path, name = dataset_path.split(",", 1)
+                dataset = load_dataset(path.strip(), name.strip())
+            elif dataset_path == "wikitext":
+                dataset = load_dataset("wikitext", "wikitext-2-raw-v1")
+            else:
+                dataset = load_dataset(dataset_path)
+        except Exception as e:
+            raise ValueError(f"Failed to load dataset {dataset_path}: {e}")
+
     
     if dataset_format == "tool_calling":
         # Multi-turn ChatML conversion: messages list → single tokenized string
@@ -141,7 +149,9 @@ def main():
     parser.add_argument("--debug", action="store_true",
                        help="Debug mode (smaller dataset, fewer epochs)")
     parser.add_argument("--dry_run", action="store_true",
-                       help="Dry run mode (runs only 1 batch, limits dataset strictly)")
+                        help="Dry run mode (runs only 1 batch, limits dataset strictly)")
+    parser.add_argument("--limit_data", type=int, default=None,
+                        help="Limit the number of training samples to N")
     
     args = parser.parse_args()
     
@@ -221,11 +231,18 @@ def main():
     logger.info("Preparing dataset...")
     tokenized_dataset = prepare_dataset(tokenizer, config)
     
+    # Handle data limiting
+    limit_data = args.limit_data
     if args.dry_run:
-        logger.info("Dry run: Truncating dataset to 2 examples")
-        tokenized_dataset["train"] = tokenized_dataset["train"].select(range(min(2, len(tokenized_dataset["train"]))))
-        if "validation" in tokenized_dataset:
-            tokenized_dataset["validation"] = tokenized_dataset["validation"].select(range(min(2, len(tokenized_dataset["validation"]))))
+        limit_data = 2
+        
+    if limit_data is not None:
+        logger.info(f"Limiting training dataset to {limit_data} examples")
+        for split in tokenized_dataset.keys():
+            tokenized_dataset[split] = tokenized_dataset[split].select(
+                range(min(limit_data, len(tokenized_dataset[split])))
+            )
+
     
     # Create dataloaders
     train_dataloader = create_dataloader(

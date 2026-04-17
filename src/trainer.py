@@ -16,7 +16,8 @@ try:
     WANDB_AVAILABLE = True
 except ImportError:
     WANDB_AVAILABLE = False
-from .mezo_optimizer import MeZOOptimizer, MeZOTrainer
+from .mezo_optimizer import MeZOOptimizer
+
 from .model_utils import load_qwen_model, prepare_model_for_mezo, save_bca_model
 from .bca_layers import BlockCirculantLinear
 from .logger_utils import logger
