@@ -1,0 +1,52 @@
+# Configuration for MeZO + BCA Fine-tuning
+model:
+  name: "Qwen/Qwen3.5-0.8B"        # Model name from Hugging Face
+  use_bca: true              # Use Block Circulant Approximation
+  block_size: 8              # Block size for circulant matrices
+  bca_layers: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]  # Layers to apply BCA
+
+dataset:
+  path: "data/tool_calling_dataset.json"   # Ganti ke dataset Anda
+  format: "tool_calling"                   # "tool_calling" atau "text" (format lama)
+  text_column: "text"                      # Hanya untuk format "text"
+  # name: "smoldata/smoltalk"             # Alternatif: load dari Hugging Face Hub
+
+training:
+  max_length: 1024              # Lebih panjang untuk multi-turn conversation
+  batch_size: 1                 # MeZO wajib batch_size=1
+  num_epochs: 2
+  learning_rate: 1e-4           # MeZO butuh LR lebih besar dari Adam
+  lr_scheduler: "cosine"
+  warmup_steps: 50
+  weight_decay: 0.01
+
+
+mezo:
+  perturbation_epsilon: 1e-3   # Perturbation scale ε
+  sampling_type: "antithetic"  # "antithetic" (2 fwd passes, lower variance) or "symmetric"
+  normalize_grad: true         # Normalize gradient estimates
+  num_grad_estimates: 1        # Number of gradient estimates per step
+  grad_clip: 1.0               # Anti-divergence: clip projected_grad to [-1, 1]
+  warmup_steps: 20             # Anti-divergence: LR warmup over first N steps
+
+bca:
+  use_fft: true              # Use FFT for circulant matrix multiplication
+  fft_backend: "numpy"       # "numpy", "scipy", or "torch"
+  compression_ratio: 0.25    # Target compression ratio (not used directly)
+
+hardware:
+  device: "cpu"              # Use CPU
+  num_threads: 8             # Number of CPU threads
+  use_mkl: true              # Use Intel MKL for FFT acceleration
+  use_bfloat16: true         # Use bfloat16 for faster computation if supported
+  compile_model: true        # Use torch.compile() for potential speedup
+
+logging:
+  log_dir: "./logs"
+  save_steps: 100
+  eval_steps: 200
+  save_total_limit: 3
+
+checkpoint:
+  output_dir: "./checkpoints"
+  save_strategy: "steps"

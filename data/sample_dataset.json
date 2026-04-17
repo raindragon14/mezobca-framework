@@ -1,0 +1,82 @@
+[
+  {
+    "text": "The quick brown fox jumps over the lazy dog. This sentence contains all letters of the English alphabet.",
+    "category": "example"
+  },
+  {
+    "text": "Machine learning is a subset of artificial intelligence that focuses on building systems that learn from data.",
+    "category": "ai"
+  },
+  {
+    "text": "The theory of relativity revolutionized our understanding of space, time, and gravity.",
+    "category": "physics"
+  },
+  {
+    "text": "Python is a high-level programming language known for its readability and versatility.",
+    "category": "programming"
+  },
+  {
+    "text": "Climate change refers to long-term shifts in temperatures and weather patterns.",
+    "category": "environment"
+  },
+  {
+    "text": "The human brain contains approximately 86 billion neurons connected by trillions of synapses.",
+    "category": "biology"
+  },
+  {
+    "text": "Blockchain is a distributed ledger technology that enables secure, transparent transactions.",
+    "category": "technology"
+  },
+  {
+    "text": "The Renaissance was a period of cultural, artistic, political and economic rebirth in Europe.",
+    "category": "history"
+  },
+  {
+    "text": "Quantum computing uses quantum bits or qubits that can exist in multiple states simultaneously.",
+    "category": "physics"
+  },
+  {
+    "text": "Photosynthesis is the process by which plants convert light energy into chemical energy.",
+    "category": "biology"
+  },
+  {
+    "text": "Neural networks are computing systems inspired by the biological neural networks in animal brains.",
+    "category": "ai"
+  },
+  {
+    "text": "The Internet of Things connects everyday objects to the internet, allowing them to send and receive data.",
+    "category": "technology"
+  },
+  {
+    "text": "Antibiotics are medicines that fight bacterial infections by killing or inhibiting bacterial growth.",
+    "category": "medicine"
+  },
+  {
+    "text": "Renewable energy sources like solar and wind power are essential for sustainable development.",
+    "category": "environment"
+  },
+  {
+    "text": "The Great Wall of China is one of the most impressive architectural feats in human history.",
+    "category": "history"
+  },
+  {
+    "text": "Object-oriented programming organizes software design around data, or objects, rather than functions and logic.",
+    "category": "programming"
+  },
+  {
+    "text": "Black holes are regions of spacetime where gravity is so strong that nothing can escape.",
+    "category": "astronomy"
+  },
+  {
+    "text": "The CRISPR-Cas9 system allows precise editing of DNA sequences in living organisms.",
+    "category": "biology"
+  },
+  {
+    "text": "Cloud computing delivers computing services over the internet on a pay-as-you-go basis.",
+    "category": "technology"
+  },
+  {
+    "text": "The Fibonacci sequence appears frequently in nature, from flower petals to spiral galaxies.",
+    "category": "mathematics"
+  }
+]

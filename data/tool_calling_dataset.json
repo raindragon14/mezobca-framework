@@ -1,0 +1,183 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a web scraping assistant. You have access to the following tools:\n\n```json\n[\n  {\n    \"name\": \"scrape_website\",\n    \"description\": \"Scrape data from a website URL and return structured data\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"url\": {\"type\": \"string\", \"description\": \"The URL to scrape\"},\n        \"selector\": {\"type\": \"string\", \"description\": \"CSS selector for target elements\"},\n        \"fields\": {\"type\": \"array\", \"items\": {\"type\": \"string\"}, \"description\": \"Fields to extract\"}\n      },\n      \"required\": [\"url\"]\n    }\n  },\n  {\n    \"name\": \"save_to_excel\",\n    \"description\": \"Save structured data to an Excel (.xlsx) file\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"data\": {\"type\": \"array\", \"description\": \"Array of objects to save\"},\n        \"filename\": {\"type\": \"string\", \"description\": \"Output filename (must end with .xlsx)\"},\n        \"sheet_name\": {\"type\": \"string\", \"description\": \"Excel sheet name\", \"default\": \"Sheet1\"}\n      },\n      \"required\": [\"data\", \"filename\"]\n    }\n  },\n  {\n    \"name\": \"filter_data\",\n    \"description\": \"Filter and clean scraped data based on conditions\",\n    \"parameters\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"data\": {\"type\": \"array\", \"description\": \"Data to filter\"},\n        \"condition\": {\"type\": \"string\", \"description\": \"Filter condition in Python expression format\"}\n      },\n      \"required\": [\"data\", \"condition\"]\n    }\n  }\n]\n```"
+      },
+      {
+        "role": "user",
+        "content": "Tolong scrape daftar produk laptop dari tokopedia.com/laptop dan simpan ke file excel."
+      },
+      {
+        "role": "assistant",
+        "content": "Baik, saya akan scrape data laptop dari Tokopedia terlebih dahulu.",
+        "tool_calls": [
+          {
+            "id": "call_001",
+            "type": "function",
+            "function": {
+              "name": "scrape_website",
+              "arguments": "{\"url\": \"https://tokopedia.com/laptop\", \"selector\": \".product-card\", \"fields\": [\"name\", \"price\", \"rating\", \"sold_count\"]}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_001",
+        "content": "[{\"name\": \"ASUS VivoBook 14\", \"price\": 7500000, \"rating\": 4.8, \"sold_count\": 320}, {\"name\": \"Lenovo IdeaPad 3\", \"price\": 6200000, \"rating\": 4.6, \"sold_count\": 510}, {\"name\": \"HP Pavilion 15\", \"price\": 8100000, \"rating\": 4.7, \"sold_count\": 210}]"
+      },
+      {
+        "role": "assistant",
+        "content": "Data berhasil di-scrape. Sekarang saya simpan ke Excel.",
+        "tool_calls": [
+          {
+            "id": "call_002",
+            "type": "function",
+            "function": {
+              "name": "save_to_excel",
+              "arguments": "{\"data\": [{\"name\": \"ASUS VivoBook 14\", \"price\": 7500000, \"rating\": 4.8, \"sold_count\": 320}, {\"name\": \"Lenovo IdeaPad 3\", \"price\": 6200000, \"rating\": 4.6, \"sold_count\": 510}, {\"name\": \"HP Pavilion 15\", \"price\": 8100000, \"rating\": 4.7, \"sold_count\": 210}], \"filename\": \"laptop_tokopedia.xlsx\", \"sheet_name\": \"Produk Laptop\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_002",
+        "content": "{\"success\": true, \"path\": \"laptop_tokopedia.xlsx\", \"rows_written\": 3}"
+      },
+      {
+        "role": "assistant",
+        "content": "Selesai! Saya berhasil:\n1. **Scrape** 3 produk laptop dari Tokopedia\n2. **Simpan** ke file `laptop_tokopedia.xlsx` (sheet: Produk Laptop)\n\nData yang tersimpan:\n- ASUS VivoBook 14 - Rp 7.500.000 (rating 4.8)\n- Lenovo IdeaPad 3 - Rp 6.200.000 (rating 4.6)\n- HP Pavilion 15 - Rp 8.100.000 (rating 4.7)"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a web scraping assistant. You have access to tools: scrape_website, save_to_excel, filter_data."
+      },
+      {
+        "role": "user",
+        "content": "Scrape berita terbaru dari kompas.com, filter hanya yang hari ini, lalu export ke excel."
+      },
+      {
+        "role": "assistant",
+        "content": "Saya akan mulai dengan scrape berita dari Kompas.com.",
+        "tool_calls": [
+          {
+            "id": "call_003",
+            "type": "function",
+            "function": {
+              "name": "scrape_website",
+              "arguments": "{\"url\": \"https://kompas.com\", \"selector\": \"article.article-list\", \"fields\": [\"title\", \"date\", \"category\", \"url\", \"summary\"]}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_003",
+        "content": "[{\"title\": \"Ekonomi Indonesia Tumbuh 5.1%\", \"date\": \"2024-01-18\", \"category\": \"Ekonomi\", \"url\": \"https://kompas.com/ekonomi-indonesia\", \"summary\": \"BPS mencatat pertumbuhan ekonomi...\"}, {\"title\": \"Update Cuaca Besok\", \"date\": \"2024-01-17\", \"category\": \"Nasional\", \"url\": \"https://kompas.com/cuaca\", \"summary\": \"BMKG memperkirakan hujan...\"}, {\"title\": \"Teknologi AI Masa Depan\", \"date\": \"2024-01-18\", \"category\": \"Teknologi\", \"url\": \"https://kompas.com/ai\", \"summary\": \"Perkembangan AI di Indonesia...\"}]"
+      },
+      {
+        "role": "assistant",
+        "content": "Data berhasil diambil. Sekarang saya filter hanya berita hari ini (2024-01-18).",
+        "tool_calls": [
+          {
+            "id": "call_004",
+            "type": "function",
+            "function": {
+              "name": "filter_data",
+              "arguments": "{\"data\": [{\"title\": \"Ekonomi Indonesia Tumbuh 5.1%\", \"date\": \"2024-01-18\", \"category\": \"Ekonomi\", \"url\": \"https://kompas.com/ekonomi-indonesia\", \"summary\": \"BPS mencatat pertumbuhan ekonomi...\"}, {\"title\": \"Update Cuaca Besok\", \"date\": \"2024-01-17\", \"category\": \"Nasional\", \"url\": \"https://kompas.com/cuaca\", \"summary\": \"BMKG memperkirakan hujan...\"}, {\"title\": \"Teknologi AI Masa Depan\", \"date\": \"2024-01-18\", \"category\": \"Teknologi\", \"url\": \"https://kompas.com/ai\", \"summary\": \"Perkembangan AI di Indonesia...\"}], \"condition\": \"date == '2024-01-18'\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_004",
+        "content": "[{\"title\": \"Ekonomi Indonesia Tumbuh 5.1%\", \"date\": \"2024-01-18\", \"category\": \"Ekonomi\", \"url\": \"https://kompas.com/ekonomi-indonesia\", \"summary\": \"BPS mencatat pertumbuhan ekonomi...\"}, {\"title\": \"Teknologi AI Masa Depan\", \"date\": \"2024-01-18\", \"category\": \"Teknologi\", \"url\": \"https://kompas.com/ai\", \"summary\": \"Perkembangan AI di Indonesia...\"}]"
+      },
+      {
+        "role": "assistant",
+        "content": "Filter selesai, tersisa 2 berita hari ini. Simpan ke Excel sekarang.",
+        "tool_calls": [
+          {
+            "id": "call_005",
+            "type": "function",
+            "function": {
+              "name": "save_to_excel",
+              "arguments": "{\"data\": [{\"title\": \"Ekonomi Indonesia Tumbuh 5.1%\", \"date\": \"2024-01-18\", \"category\": \"Ekonomi\", \"url\": \"https://kompas.com/ekonomi-indonesia\", \"summary\": \"BPS mencatat pertumbuhan ekonomi...\"}, {\"title\": \"Teknologi AI Masa Depan\", \"date\": \"2024-01-18\", \"category\": \"Teknologi\", \"url\": \"https://kompas.com/ai\", \"summary\": \"Perkembangan AI di Indonesia...\"}], \"filename\": \"berita_kompas_hari_ini.xlsx\", \"sheet_name\": \"Berita 2024-01-18\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_005",
+        "content": "{\"success\": true, \"path\": \"berita_kompas_hari_ini.xlsx\", \"rows_written\": 2}"
+      },
+      {
+        "role": "assistant",
+        "content": "Proses selesai dalam 3 langkah:\n1. **Scrape** → 3 berita dari Kompas.com\n2. **Filter** → 2 berita hari ini (2024-01-18)\n3. **Export** → `berita_kompas_hari_ini.xlsx`\n\nBerita yang tersimpan:\n- Ekonomi Indonesia Tumbuh 5.1% (Ekonomi)\n- Teknologi AI Masa Depan (Teknologi)"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a web scraping assistant. You have access to tools: scrape_website, save_to_excel, filter_data."
+      },
+      {
+        "role": "user",
+        "content": "Bisa scrape harga saham dari idx.co.id dan simpan ke excel dengan kolom nama saham, harga, dan persentase perubahan?"
+      },
+      {
+        "role": "assistant",
+        "content": "Tentu! Saya scrape data saham dari IDX terlebih dahulu.",
+        "tool_calls": [
+          {
+            "id": "call_006",
+            "type": "function",
+            "function": {
+              "name": "scrape_website",
+              "arguments": "{\"url\": \"https://idx.co.id/id/data-pasar/ringkasan-perdagangan/ringkasan-saham\", \"selector\": \".stock-table tr\", \"fields\": [\"stock_code\", \"company_name\", \"price\", \"change_percent\"]}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_006",
+        "content": "[{\"stock_code\": \"BBCA\", \"company_name\": \"Bank Central Asia\", \"price\": 9875, \"change_percent\": \"+1.2%\"}, {\"stock_code\": \"TLKM\", \"company_name\": \"Telkom Indonesia\", \"price\": 3640, \"change_percent\": \"-0.5%\"}, {\"stock_code\": \"ASII\", \"company_name\": \"Astra International\", \"price\": 5250, \"change_percent\": \"+0.8%\"}]"
+      },
+      {
+        "role": "assistant",
+        "content": "Data saham berhasil diambil. Menyimpan ke Excel dengan format yang diminta.",
+        "tool_calls": [
+          {
+            "id": "call_007",
+            "type": "function",
+            "function": {
+              "name": "save_to_excel",
+              "arguments": "{\"data\": [{\"Nama Saham\": \"Bank Central Asia\", \"Kode\": \"BBCA\", \"Harga (IDR)\": 9875, \"Perubahan (%)\": \"+1.2%\"}, {\"Nama Saham\": \"Telkom Indonesia\", \"Kode\": \"TLKM\", \"Harga (IDR)\": 3640, \"Perubahan (%)\": \"-0.5%\"}, {\"Nama Saham\": \"Astra International\", \"Kode\": \"ASII\", \"Harga (IDR)\": 5250, \"Perubahan (%)\": \"+0.8%\"}], \"filename\": \"saham_idx.xlsx\", \"sheet_name\": \"Data Saham IDX\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_007",
+        "content": "{\"success\": true, \"path\": \"saham_idx.xlsx\", \"rows_written\": 3}"
+      },
+      {
+        "role": "assistant",
+        "content": "Selesai! File `saham_idx.xlsx` telah dibuat dengan 3 kolom yang Anda minta:\n- **Nama Saham**: nama lengkap perusahaan\n- **Harga (IDR)**: harga saham saat ini\n- **Perubahan (%)**: persentase naik/turun\n\nData mencakup 3 saham: BBCA, TLKM, dan ASII."
+      }
+    ]
+  }
+]

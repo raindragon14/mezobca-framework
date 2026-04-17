@@ -1,0 +1,97 @@
+=== Extracted from reference/MeZO.pdf ===
+Fine-Tuning Language Models with Just
+Forward Passes
+Sadhika Malladi∗
+Tianyu Gao∗
+Eshaan Nichani
+Alex Damian
+Jason D. Lee
+Danqi Chen
+Sanjeev Arora
+Princeton University
+{smalladi, tianyug, eshnich, ad27, jasonlee, danqic, arora}@princeton.edu
+Abstract
+Fine-tuning language models (LMs) has yielded success on diverse downstream
+tasks, but as LMs grow in size, backpropagation requires a prohibitively large
+amount of memory. Zeroth-order (ZO) methods can in principle estimate gradients
+using only two forward passes but are theorized to be catastrophically slow for
+optimizing large models. In this work, we propose a memory-efficient zeroth-
+order optimizer (MeZO), adapting the classical ZO-SGD method to operate in-
+place, thereby fine-tuning LMs with the same memory footprint as inference. For
+example, with a single A100 80GB GPU, MeZO can train a 30-billion parameter
+model, whereas fine-tuning with backpropagation can train only a 2.7B LM with
+the same budget. We conduct comprehensive experiments across model types
+(masked and autoregressive LMs), model scales (up to 66B), and downstream
+tasks (classification, multiple-choice, and generation). Our results demonstrate
+that (1) MeZO significantly outperforms in-context learning and linear probing;
+(2) MeZO achieves comparable performance to fine-tuning with backpropagation
+across multiple tasks, with up to 12× memory reduction and up to 2× GPU-hour
+reduction in our implementation; (3) MeZO is compatible with both full-parameter
+and parameter-efficient tuning techniques such as LoRA and prefix tuning; (4)
+MeZO can effectively optimize non-differentiable objectives (e.g., maximizing
+accuracy or F1). We support our empirical findings with theoretical insights,
+highlighting how adequate pre-training and task prompts enable MeZO to fine-tune
+huge models, despite classical ZO analyses suggesting otherwise.1
+1
+Introduction
+Fine-tuning pre-trained language models (LMs) has been the dominant methodology for solving many
+language tasks [28], adapting to specialized domains [42], or incorporating human instructions and
+preferences [73]. However, as LMs are scaled up [13, 72], computing gradients for backpropagation
+requires a prohibitive amount of memory – in our test, up to 12× the memory required for inference –
+because it needs to cache activations during the forward pass, gradients during the backward pass,
+and, in the case of Adam [52], also store gradient history (see Section 3.4 for a detailed analysis).
+As a result,
+
+=== Extracted from reference/BCA.pdf ===
+arXiv:2505.00582v1  [cs.CL]  1 May 2025
+Block Circulant Adapter for Large Language Models
+Xinyu Ding1 , Meiqi Wang1 , Siyu Liao1 and Zhongfeng Wang1
+1Sun Yat-sen University
+dingbai1357718507@gmail.com, wangmq53@mail.sysu.edu.cn, liaocs2008@gmail.com,
+wangzf83@mail.sysu.edu.cn
+Abstract
+Fine-tuning large language models (LLMs) is diffi-
+cult due to their huge model size. Recent Fourier
+domain-based methods show potential for reduc-
+ing fine-tuning costs. We propose a block circu-
+lant matrix-based fine-tuning method with a stable
+training heuristic to leverage the properties of cir-
+culant matrices and one-dimensional Fourier trans-
+forms to reduce storage and computation costs.
+Experiments show that our method uses 14× less
+number of parameters than VeRA, 16× smaller
+than LoRA and 32× less FLOPs than FourierFT,
+while maintaining close or better task performance.
+Our approach presents a promising way in fre-
+quency domain to fine-tune large models on down-
+stream tasks.
+1
+Introduction
+Large language models (LLMs) have been applied to serve
+as foundation models for many applications [Cheng et al.,
+2024] because of their outstanding performance in various
+tasks. Different from many traditional deep learning appli-
+cations, these models are trained in an unsupervised fashion
+on large scale of data. The huge data volume also indirectly
+forces LLMs to perform unsupervised training, since collect-
+ing human labels can be expensive and slow. Starting from
+the classical BERT model [Devlin et al., 2019], LLMs de-
+velops into GPT model [Brown et al., 2020], which inspires
+many modern LLMs like the LLaMA model [Touvron et al.,
+2023].
+Given a well trained LLM, it is not directly applicable to
+downstream tasks. As a task is often highly customized (e.g.,
+write a story based on some keywords), there is some need
+to further fine-tune the model to better fit the application. In
+general, there are three ways to fine-tune a LLM, i.e., full
+fine-tuning, partially fine-tuning and prompt tuning. Full fine-
+tuning means training all parameters of the LLM on down-
+stream task data, but it can be challenging due to the huge
+computation resource cost. Partially fine-tuning is training
+a small part of parameters, which takes much less memory,
+computation time, and power consumption. Prompt tuning is
+to add more description (e.g., some task examples) in input so
+that LLM can learn during inference time. Such capability is
+also called in context learning. However, prompt tuning can
+be 
+
