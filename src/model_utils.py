@@ -300,7 +300,7 @@ def load_bca_model(
     
     # Load base model
     if base_model_name is None:
-        base_model_name = config.get("_name_or_path", "Qwen/Qwen2.5-0.8B")
+        base_model_name = config.get("_name_or_path", "Qwen/Qwen3.5-0.8B")
     
     model, tokenizer = load_qwen_model(
         model_name=base_model_name,
